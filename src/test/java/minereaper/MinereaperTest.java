@@ -9,5 +9,8 @@ public class MinereaperTest {
         ComputerPlayer computerOpponent = new ComputerPlayer(GridTest.createBeginner9x9Grid());
         Minereaper minereaperGame = new Minereaper(humanPlayer, computerOpponent);
         minereaperGame.play();
+        assert minereaperGame.isOver();
     }
+
+
 }

@@ -40,6 +40,26 @@ public class Grid {
         return sb.toString();
     }
 
+    public String toDebugString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("--- DEBUG BOARD VIEW ---\n");
+        sb.append("    ");
+        for (int x = 0; x < width; x++) {
+            sb.append(x).append(" ");
+        }
+        sb.append("\n");
+        sb.append("   ").append("-".repeat(width * 2 + 1)).append("\n");
+
+        for (int y = 0; y < height; y++) {
+            sb.append(y).append(" | ");
+            for (int x = 0; x < width; x++) {
+                sb.append(tiles[x][y].toDebugString()).append(" ");
+            }
+            sb.append("\n");
+        }
+        return sb.toString();
+    }
+
     private void randomlyDisperseMines(int numOfMines) {
         int minesPlaced = 0;
 

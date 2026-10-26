@@ -19,12 +19,14 @@ public class Minereaper {
     public String toString() {
         return "Minereaper: turn " + turnCount + "\n" +
                 humanPlayer.getName() + "'s Board:\n" + humanPlayer.getGrid().toString() +
-                computerOpponent.getName() + "'s Board:\n" + computerOpponent.getGrid().toString();
+                computerOpponent.getName() + "'s Board:\n" + computerOpponent.getGrid().toString() +
+                humanPlayer.getGrid().toDebugString() +
+                computerOpponent.getGrid().toDebugString();
     }
 
     public void play() {
         logger.info("Minereaper: Starting...");
-        while (!isGameOver()) {
+        while (!isOver()) {
             playTurn();
             turnCount++;
             logger.info(this.toString());
@@ -47,7 +49,7 @@ public class Minereaper {
         }
     }
 
-    public boolean isGameOver() {
+    public boolean isOver() {
         return humanPlayer.isDefeated() || computerOpponent.isDefeated();
     }
 }

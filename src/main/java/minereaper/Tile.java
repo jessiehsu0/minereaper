@@ -25,6 +25,13 @@ public class Tile {
         }
     }
 
+    public String toDebugString() {
+        if (isMine) {
+            return "*";
+        }
+        return numOfAdjacentMines == 0 ? "_" : String.valueOf(numOfAdjacentMines);
+    }
+
     public boolean revealIsSafe() {
         isRevealed = true;
         return !isMine;
