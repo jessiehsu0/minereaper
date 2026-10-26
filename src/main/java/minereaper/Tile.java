@@ -2,18 +2,15 @@ package minereaper;
 
 public class Tile {
     private boolean isMine;
-    private boolean isRevealed;
-    private boolean isFlagged;
-    private int numOfAdjacentMines;
+    private boolean isRevealed = false;
+    private boolean isFlagged = false;
+    private int numOfAdjacentMines = INITIAL_NUM_OF_ADJACENT_MINES;
 
     public static int INITIAL_NUM_OF_ADJACENT_MINES = 0;
 
     // old constructor - potentially will bring it back
     public Tile(boolean isMine) {
         this.isMine = isMine;
-        isRevealed = false;
-        isFlagged = false;
-        numOfAdjacentMines = INITIAL_NUM_OF_ADJACENT_MINES;
     }
 
     @Override

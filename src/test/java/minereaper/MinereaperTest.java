@@ -8,10 +8,20 @@ import org.slf4j.Logger;
 public class MinereaperTest {
     static Logger logger = org.slf4j.LoggerFactory.getLogger(Minereaper.class);
 
+    private final TileFactory tileFactory = new TileFactory();
+
     @Test
     void testGame() {
-        HumanPlayer humanPlayer = new HumanPlayer("Bapple", GridTest.createBeginner9x9Grid());
-        ComputerPlayer computerOpponent = new ComputerPlayer(GridTest.createBeginner9x9Grid());
+        Grid humanPlayerGrid = Grid.newGridBuilder(tileFactory)
+                .createBeginnerGrid()
+                .build();
+
+        Grid computerOpponentGrid = Grid.newGridBuilder(tileFactory)
+                .createBeginnerGrid()
+                .build();
+
+        HumanPlayer humanPlayer = new HumanPlayer("Bapple", humanPlayerGrid);
+        ComputerPlayer computerOpponent = new ComputerPlayer(computerOpponentGrid);
         Minereaper minereaperGame = new Minereaper(humanPlayer, computerOpponent);
         minereaperGame.play();
         assert minereaperGame.isOver();
@@ -25,8 +35,16 @@ public class MinereaperTest {
         int TOTAL_GAMES = 100;
 
         for (int i = 0; i < TOTAL_GAMES; i++) {
-            HumanPlayer humanPlayer = new HumanPlayer("Bapple", GridTest.createBeginner9x9Grid());
-            ComputerPlayer computerOpponent = new ComputerPlayer(GridTest.createBeginner9x9Grid());
+            Grid humanPlayerGrid = Grid.newGridBuilder(tileFactory)
+                    .createBeginnerGrid()
+                    .build();
+
+            Grid computerOpponentGrid = Grid.newGridBuilder(tileFactory)
+                    .createBeginnerGrid()
+                    .build();
+
+            HumanPlayer humanPlayer = new HumanPlayer("Bapple", humanPlayerGrid);
+            ComputerPlayer computerOpponent = new ComputerPlayer(computerOpponentGrid);
             Minereaper game = new Minereaper(humanPlayer, computerOpponent);
 
             game.play();

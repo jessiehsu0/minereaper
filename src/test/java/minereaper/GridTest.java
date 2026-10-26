@@ -12,9 +12,14 @@ public class GridTest {
     private static final Random random = new Random();
     static Logger logger = org.slf4j.LoggerFactory.getLogger(Minereaper.class);
 
+    private final TileFactory tileFactory = new TileFactory();
+
     @Test
     void testPlayerDefeatedOnHitMine() {
-        Grid oneByOneGrid = createGridMaze(1, 1, 1);
+        Grid oneByOneGrid = Grid.newGridBuilder(tileFactory)
+                .createTiles(1, 1)
+                .randomlyDisperseMines(1)
+                .build();
         HumanPlayer humanPlayer = new HumanPlayer("Human", oneByOneGrid);
         humanPlayer.makeMove();
         assertTrue(humanPlayer.isDefeated());
@@ -22,7 +27,10 @@ public class GridTest {
 
     @Test
     void testToString() {
-        Grid oneByOneGrid = createGridMaze(2, 2, 1);
+        Grid oneByOneGrid = Grid.newGridBuilder(tileFactory)
+                .createTiles(2, 2)
+                .randomlyDisperseMines(1)
+                .build();
         HumanPlayer humanPlayer = new HumanPlayer("Human", oneByOneGrid);
         humanPlayer.makeMove();
         String gridString = oneByOneGrid.toString();
@@ -33,25 +41,12 @@ public class GridTest {
 
     @Test
     void testRevealTile() {
-        Grid oneByOneGrid = createGridMaze(3, 3, 0);
+        Grid oneByOneGrid = Grid.newGridBuilder(tileFactory)
+                .createTiles(3, 3)
+                .randomlyDisperseMines(0)
+                .build();
         int randomX = random.nextInt(3);
         int randomY = random.nextInt(3);
         assertTrue(oneByOneGrid.revealIfTileIsSafe(randomX, randomY));
-    }
-
-    static Grid createBeginner9x9Grid() {
-        return createGridMaze(9, 9, 10);
-    }
-
-    private static Grid createGridMaze(int width, int height, int numOfMines) {
-        Tile[][] tiles = new Tile[width][height];
-
-        for (int x = 0; x < width; x++) {
-            for (int y = 0; y < height; y++) {
-                tiles[x][y] = new Tile(false);
-            }
-        }
-
-        return new Grid(width, height, tiles, numOfMines);
     }
 }

@@ -1,22 +1,18 @@
 package minereaper;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.Random;
 
 public class Grid {
     private static final Random random = new Random();
 
-    private final int width;
-    private final int height;
-    private final Tile[][] tiles;
+    private int width;
+    private int height;
+    private Tile[][] tiles;
 
-    // lowkey not sure if we should be delegating the disperse mine logic to the grid
-    public Grid(int width, int height, Tile[][] tiles, int numOfMines) {
-        this.width = width;
-        this.height = height;
-        this.tiles = tiles;
-        randomlyDisperseMines(numOfMines);
-        calculateAllAdjacentMines();
-    }
+    private Grid() {}
 
     @Override
     public String toString() {
@@ -60,23 +56,8 @@ public class Grid {
         return sb.toString();
     }
 
-    private void randomlyDisperseMines(int numOfMines) {
-        int minesPlaced = 0;
-
-        int totalNumOfTiles = width * height;
-        if (numOfMines > totalNumOfTiles) {
-            throw new IllegalArgumentException("Cannot place more mines than total tiles!");
-        }
-
-        while (minesPlaced < numOfMines) {
-            int x = random.nextInt(width);
-            int y = random.nextInt(height);
-
-            if (!tiles[x][y].isMine()) {
-                tiles[x][y].setIsMine(true);
-                minesPlaced++;
-            }
-        }
+    public static GridBuilder newGridBuilder(TileFactory tileFactory) {
+        return new GridBuilder(tileFactory);
     }
 
     private void calculateAllAdjacentMines() {
@@ -133,4 +114,61 @@ public class Grid {
 
     public int getWidth() { return width; }
     public int getHeight() { return height; }
+
+    public static class GridBuilder {
+        static Logger logger = LoggerFactory.getLogger(GridBuilder.class);
+
+        private final TileFactory tileFactory;
+        final Grid grid = new Grid();
+
+        private GridBuilder(TileFactory tileFactory) { this.tileFactory = tileFactory; }
+
+        public GridBuilder createNxMGridWithMines(int n, int m, int numMines) { return createTiles(n, m).randomlyDisperseMines(numMines); }
+
+        public GridBuilder createBeginnerGrid() { return createNxMGridWithMines(9, 9, 10); }
+        public GridBuilder createIntermediateGrid() { return createNxMGridWithMines(16, 16, 40); }
+        public GridBuilder createExpertGrid() { return createNxMGridWithMines(30, 16, 99); }
+
+        public GridBuilder createTiles(int width, int height) {
+            Tile[][] tileGrid = new Tile[width][height];
+
+            for (int x = 0; x < width; x++) {
+                for (int y = 0; y < height; y++) {
+                    tileGrid[x][y] = TileFactory.createTile(false);
+                }
+            }
+
+            grid.width = width;
+            grid.height = height;
+            grid.tiles = tileGrid;
+
+            return this;
+        }
+
+        public GridBuilder randomlyDisperseMines(int numOfMines) {
+            int minesPlaced = 0;
+
+            int totalNumOfTiles = grid.width * grid.height;
+            if (numOfMines > totalNumOfTiles) {
+                throw new IllegalArgumentException("Cannot place more mines than total tiles!");
+            }
+
+            while (minesPlaced < numOfMines) {
+                int x = random.nextInt(grid.width);
+                int y = random.nextInt(grid.height);
+
+                if (!grid.tiles[x][y].isMine()) {
+                    grid.tiles[x][y].setIsMine(true);
+                    minesPlaced++;
+                }
+            }
+
+            return this;
+        }
+
+        public Grid build() {
+            grid.calculateAllAdjacentMines();
+            return grid;
+        }
+    }
 }
