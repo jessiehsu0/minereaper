@@ -3,6 +3,7 @@ package minereaper;
 public class Tile {
     private boolean isMine;
     private boolean isRevealed;
+    private boolean isFlagged;
     private int numOfAdjacentMines;
 
     public static int INITIAL_NUM_OF_ADJACENT_MINES = 0;
@@ -11,6 +12,7 @@ public class Tile {
     public Tile(boolean isMine) {
         this.isMine = isMine;
         isRevealed = false;
+        isFlagged = false;
         numOfAdjacentMines = INITIAL_NUM_OF_ADJACENT_MINES;
     }
 
@@ -31,6 +33,12 @@ public class Tile {
         }
         return numOfAdjacentMines == 0 ? "_" : String.valueOf(numOfAdjacentMines);
     }
+
+    public void toggleFlag() {
+        if (!isRevealed) { isFlagged = !isFlagged; }
+    }
+
+    public boolean isFlagged() { return isFlagged; }
 
     public boolean revealIsSafe() {
         isRevealed = true;

@@ -1,4 +1,7 @@
-package minereaper;
+package minereaper.player;
+
+import minereaper.Grid;
+import minereaper.Tile;
 
 import java.util.Random;
 import java.util.Scanner;
@@ -29,7 +32,7 @@ public class HumanPlayer extends Player {
             Tile target = grid.getTile(x, y);
 
             if (!target.isRevealed()) {
-                boolean safe = grid.revealTileIsSafe(x, y);
+                boolean safe = grid.revealIfTileIsSafe(x, y);
                 if (!safe) {
                     isDefeated = true;
                     System.out.println("KABOOM! " + name + " hit a mine at " + "(" + x + ", " + y + ").");
@@ -41,6 +44,7 @@ public class HumanPlayer extends Player {
         }
     }
 
+    // Ex. of Strategy Pattern - will likely be extended further for harder computer strategies as well
     // TODO: this is a placeholder for the UI implementation
     private void userInputMove() {
         boolean validMove = false;
@@ -56,7 +60,7 @@ public class HumanPlayer extends Player {
                     continue;
                 }
 
-                boolean safe = grid.revealTileIsSafe(x, y);
+                boolean safe = grid.revealIfTileIsSafe(x, y);
                 if (!safe) {
                     isDefeated = true;
                     System.out.println("BOOM! " + name + " hit a mine at " + "(" + x + ", " + y + ").");

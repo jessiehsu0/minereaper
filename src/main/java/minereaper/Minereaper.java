@@ -1,5 +1,8 @@
 package minereaper;
 
+import minereaper.player.ComputerPlayer;
+import minereaper.player.HumanPlayer;
+import minereaper.player.Player;
 import org.slf4j.Logger;
 
 public class Minereaper {
@@ -31,7 +34,11 @@ public class Minereaper {
             turnCount++;
             logger.info(this.toString());
         }
-        logger.info(getWinner().getName() + " won!");
+        if (getWinner() != null)
+            logger.info(getWinner().getName() + " won!");
+        else {
+            logger.info("No one won!");
+        }
     }
 
     private void playTurn() {
@@ -39,7 +46,7 @@ public class Minereaper {
         computerOpponent.makeMove();
     }
 
-    private Player getWinner() {
+    public Player getWinner() {
         if (computerOpponent.isDefeated() && !humanPlayer.isDefeated()) {
             return humanPlayer;
         } else if (humanPlayer.isDefeated() && !computerOpponent.isDefeated()) {

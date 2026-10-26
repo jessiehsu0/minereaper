@@ -1,4 +1,6 @@
-package minereaper;
+package minereaper.player;
+
+import minereaper.Grid;
 
 public abstract class Player {
     protected final String name;

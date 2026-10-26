@@ -109,20 +109,26 @@ public class Grid {
         current.setNumOfAdjacentMines(mineCount);
     }
 
-    public boolean revealTileIsSafe(int x, int y) {
+    // TODO: this'll be of more use when the actual UI comes into play
+    public void toggleFlagTile(int x, int y) {
         validateCoordinates(x, y);
-        return tiles[x][y].revealIsSafe();
+        tiles[x][y].toggleFlag();
     }
 
-    public Tile getTile(int x, int y) {
+    public boolean revealIfTileIsSafe(int x, int y) {
         validateCoordinates(x, y);
-        return tiles[x][y];
+        return tiles[x][y].revealIsSafe();
     }
 
     private void validateCoordinates(int x, int y) {
         if (x < 0 || x >= width || y < 0 || y >= height) {
             throw new IllegalArgumentException("Coordinates out of bounds: (" + x + ", " + y + ")");
         }
+    }
+
+    public Tile getTile(int x, int y) {
+        validateCoordinates(x, y);
+        return tiles[x][y];
     }
 
     public int getWidth() { return width; }

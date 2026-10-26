@@ -1,4 +1,7 @@
-package minereaper;
+package minereaper.player;
+
+import minereaper.Grid;
+import minereaper.Tile;
 
 import java.util.Random;
 
@@ -21,7 +24,7 @@ public class ComputerPlayer extends Player {
             Tile target = grid.getTile(x, y);
 
             if (!target.isRevealed()) {
-                boolean safe = grid.revealTileIsSafe(x, y);
+                boolean safe = grid.revealIfTileIsSafe(x, y);
                 if (!safe) {
                     isDefeated = true;
                     System.out.println("KABOOM! " + name + " hit a mine at " + "(" + x + ", " + y + ").");
