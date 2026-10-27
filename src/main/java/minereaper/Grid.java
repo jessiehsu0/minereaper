@@ -117,6 +117,30 @@ public class Grid {
     public int getWidth() { return width; }
     public int getHeight() { return height; }
 
+    public int getNumOfMines() {
+        int mineCount = 0;
+        for (int row = 0; row < height; row++) {
+            for (int col = 0; col < width; col++) {
+                if (tiles[row][col].isMine()) {
+                    mineCount++;
+                }
+            }
+        }
+        return mineCount;
+    }
+
+    public int getNumOfPowerUps() {
+        int powerUpCount = 0;
+        for (int row = 0; row < height; row++) {
+            for (int col = 0; col < width; col++) {
+                if (tiles[row][col].hasPowerUp()) {
+                    powerUpCount++;
+                }
+            }
+        }
+        return powerUpCount;
+    }
+
     public static class GridBuilder {
         static Logger logger = LoggerFactory.getLogger(GridBuilder.class);
 
@@ -147,6 +171,7 @@ public class Grid {
             return this;
         }
 
+        // TODO: if there are pre-existing power ups, we can't place over those - need to add that in
         public GridBuilder addRandomlyDispersedMines(int numOfMines) {
             int minesPlaced = 0;
 
@@ -168,18 +193,29 @@ public class Grid {
             return this;
         }
 
-        // TODO: need to add a check to make sure we're not trying to place over mines (powerUps.size() > total num of tiles - num mines)
+        // TODO: if there are pre-existing power ups, we can't place over those - need to add that in
+        // decompose :(
         public GridBuilder addRandomlyDispersedPowerUps(List<IPowerUp> powerUps) {
             int totalNumOfTiles = grid.width * grid.height;
+            int availableSafeTiles = totalNumOfTiles - grid.getNumOfMines();
 
-            if (powerUps.size() > totalNumOfTiles) {
-                throw new IllegalArgumentException("Cannot place more power ups than total tiles!");
+            // TODO: modify to take num mines into account
+            if (powerUps.size() > availableSafeTiles) {
+                throw new IllegalArgumentException("Cannot place more power ups than total number of safe tiles!");
             }
 
             for (IPowerUp powerUp : powerUps) {
-                Tile randomTile = findRandomTileInGrid();
-                if (!randomTile.isMine() && !randomTile.hasPowerUp()) {
-                    randomTile.setPowerUp(powerUp);
+                boolean placed = false;
+                int attempts = 0;
+
+                while (!placed && attempts < 1000) {
+                    Tile randomTile = findRandomTileInGrid();
+
+                    if (!randomTile.isMine() && !randomTile.hasPowerUp()) {
+                        randomTile.setPowerUp(powerUp);
+                        placed = true;
+                    }
+                    attempts++;
                 }
             }
 
@@ -192,6 +228,7 @@ public class Grid {
             return grid.getTile(x, y);
         }
 
+        // TODO: probably need to fix this
         public Grid build() {
             grid.calculateAllAdjacentMines();
             return grid;

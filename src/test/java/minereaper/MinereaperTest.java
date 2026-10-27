@@ -14,7 +14,6 @@ public class MinereaperTest {
 
     @Test
     void testGame() {
-
         Grid humanPlayerGrid = Grid.newGridBuilder(tileFactory)
                 .createBeginnerGrid()
                 .addRandomlyDispersedPowerUps(powerUpFactory.createRevealSafePowerUps(10))
