@@ -1,5 +1,6 @@
 package minereaper;
 
+import minereaper.player.ComputerPlayer;
 import minereaper.player.HumanPlayer;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
@@ -18,10 +19,11 @@ public class GridTest {
     void testPlayerDefeatedOnHitMine() {
         Grid oneByOneGrid = Grid.newGridBuilder(tileFactory)
                 .createTiles(1, 1)
-                .randomlyDisperseMines(1)
+                .addRandomlyDispersedMines(1)
                 .build();
+        ComputerPlayer computerPlayer = new ComputerPlayer(oneByOneGrid);
         HumanPlayer humanPlayer = new HumanPlayer("Human", oneByOneGrid);
-        humanPlayer.makeMove();
+        humanPlayer.makeMove(computerPlayer);
         assertTrue(humanPlayer.isDefeated());
     }
 
@@ -29,10 +31,11 @@ public class GridTest {
     void testToString() {
         Grid oneByOneGrid = Grid.newGridBuilder(tileFactory)
                 .createTiles(2, 2)
-                .randomlyDisperseMines(1)
+                .addRandomlyDispersedMines(1)
                 .build();
+        ComputerPlayer computerPlayer = new ComputerPlayer(oneByOneGrid);
         HumanPlayer humanPlayer = new HumanPlayer("Human", oneByOneGrid);
-        humanPlayer.makeMove();
+        humanPlayer.makeMove(computerPlayer);
         String gridString = oneByOneGrid.toString();
         logger.info(gridString);
 
@@ -43,7 +46,7 @@ public class GridTest {
     void testRevealTile() {
         Grid oneByOneGrid = Grid.newGridBuilder(tileFactory)
                 .createTiles(3, 3)
-                .randomlyDisperseMines(0)
+                .addRandomlyDispersedMines(0)
                 .build();
         int randomX = random.nextInt(3);
         int randomY = random.nextInt(3);

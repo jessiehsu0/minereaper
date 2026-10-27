@@ -1,8 +1,10 @@
 package minereaper;
 
+import minereaper.powerup.IPowerUp;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.List;
 import java.util.Random;
 
 public class Grid {
@@ -123,7 +125,7 @@ public class Grid {
 
         private GridBuilder(TileFactory tileFactory) { this.tileFactory = tileFactory; }
 
-        public GridBuilder createNxMGridWithMines(int n, int m, int numMines) { return createTiles(n, m).randomlyDisperseMines(numMines); }
+        public GridBuilder createNxMGridWithMines(int n, int m, int numMines) { return createTiles(n, m).addRandomlyDispersedMines(numMines); }
 
         public GridBuilder createBeginnerGrid() { return createNxMGridWithMines(9, 9, 10); }
         public GridBuilder createIntermediateGrid() { return createNxMGridWithMines(16, 16, 40); }
@@ -145,25 +147,49 @@ public class Grid {
             return this;
         }
 
-        public GridBuilder randomlyDisperseMines(int numOfMines) {
+        public GridBuilder addRandomlyDispersedMines(int numOfMines) {
             int minesPlaced = 0;
 
             int totalNumOfTiles = grid.width * grid.height;
+
             if (numOfMines > totalNumOfTiles) {
                 throw new IllegalArgumentException("Cannot place more mines than total tiles!");
             }
 
             while (minesPlaced < numOfMines) {
-                int x = random.nextInt(grid.width);
-                int y = random.nextInt(grid.height);
+                Tile randomTile = findRandomTileInGrid();
 
-                if (!grid.tiles[x][y].isMine()) {
-                    grid.tiles[x][y].setIsMine(true);
+                if (!randomTile.isMine()) {
+                    randomTile.setIsMine(true);
                     minesPlaced++;
                 }
             }
 
             return this;
+        }
+
+        // TODO: need to add a check to make sure we're not trying to place over mines (powerUps.size() > total num of tiles - num mines)
+        public GridBuilder addRandomlyDispersedPowerUps(List<IPowerUp> powerUps) {
+            int totalNumOfTiles = grid.width * grid.height;
+
+            if (powerUps.size() > totalNumOfTiles) {
+                throw new IllegalArgumentException("Cannot place more power ups than total tiles!");
+            }
+
+            for (IPowerUp powerUp : powerUps) {
+                Tile randomTile = findRandomTileInGrid();
+                if (!randomTile.isMine() && !randomTile.hasPowerUp()) {
+                    randomTile.setPowerUp(powerUp);
+                }
+            }
+
+            return this;
+        }
+
+        private Tile findRandomTileInGrid() {
+            int x = random.nextInt(grid.width);
+            int y = random.nextInt(grid.height);
+            return grid.getTile(x, y);
         }
 
         public Grid build() {

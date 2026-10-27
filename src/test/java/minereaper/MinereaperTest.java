@@ -2,6 +2,7 @@ package minereaper;
 
 import minereaper.player.ComputerPlayer;
 import minereaper.player.HumanPlayer;
+import minereaper.powerup.PowerUpFactory;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 
@@ -9,15 +10,21 @@ public class MinereaperTest {
     static Logger logger = org.slf4j.LoggerFactory.getLogger(Minereaper.class);
 
     private final TileFactory tileFactory = new TileFactory();
+    private final PowerUpFactory powerUpFactory = new PowerUpFactory();
 
     @Test
     void testGame() {
+
         Grid humanPlayerGrid = Grid.newGridBuilder(tileFactory)
                 .createBeginnerGrid()
+                .addRandomlyDispersedPowerUps(powerUpFactory.createRevealSafePowerUps(10))
+                .addRandomlyDispersedPowerUps(powerUpFactory.createHideTilesPowerUps(30))
                 .build();
 
         Grid computerOpponentGrid = Grid.newGridBuilder(tileFactory)
                 .createBeginnerGrid()
+                .addRandomlyDispersedPowerUps(powerUpFactory.createRevealSafePowerUps(10))
+                .addRandomlyDispersedPowerUps(powerUpFactory.createHideTilesPowerUps(30))
                 .build();
 
         HumanPlayer humanPlayer = new HumanPlayer("Bapple", humanPlayerGrid);

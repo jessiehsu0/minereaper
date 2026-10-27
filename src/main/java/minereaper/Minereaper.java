@@ -20,8 +20,7 @@ public class Minereaper {
 
     @Override
     public String toString() {
-        return "Minereaper: turn " + turnCount + "\n" +
-                humanPlayer.getName() + "'s Board:\n" + humanPlayer.getGrid().toString() +
+        return humanPlayer.getName() + "'s Board:\n" + humanPlayer.getGrid().toString() +
                 computerOpponent.getName() + "'s Board:\n" + computerOpponent.getGrid().toString() +
                 humanPlayer.getGrid().toDebugString() +
                 computerOpponent.getGrid().toDebugString();
@@ -29,9 +28,11 @@ public class Minereaper {
 
     public void play() {
         logger.info("Minereaper: Starting...");
+        logger.info(this.toString());
         while (!isOver()) {
-            playTurn();
             turnCount++;
+            logger.info("Minereaper: turn " + turnCount + "\n");
+            playTurn();
             logger.info(this.toString());
         }
         if (getWinner() != null)
@@ -42,8 +43,9 @@ public class Minereaper {
     }
 
     private void playTurn() {
-        humanPlayer.makeMove();
-        computerOpponent.makeMove();
+        // this feels a little clumsy ngl - should try to fix
+        humanPlayer.makeMove(computerOpponent);
+        computerOpponent.makeMove(humanPlayer);
     }
 
     public Player getWinner() {

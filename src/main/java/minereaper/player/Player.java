@@ -12,7 +12,7 @@ public abstract class Player {
         this.grid = grid;
     }
 
-    public abstract void makeMove();
+    public abstract void makeMove(Player opponent);
 
     public boolean isDefeated() { return isDefeated; }
     public Grid getGrid() { return grid; }
